@@ -1,41 +1,91 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DgdaBackend.Entities;
+using DGDABackend.DataLayer;
 using Microsoft.AspNet.Mvc;
 
-namespace dgda_backend.Controllers
+namespace DgdaBackend.Controllers
 {
     [Route("api/[controller]")]
-    public class ProductController : Controller
+    public class ProductsController : Controller
     {
-        // GET: api/values
+        private readonly IProductsRepository _productsRepository;
+
+        public ProductsController(IProductsRepository productsRepository)
+        {
+            _productsRepository = productsRepository;
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Product> Get()
         {
-            return new string[] { "value1", "value2" };
+            return _productsRepository.GetProducts();
         }
 
-        // GET api/values/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public Product Get(string name)
         {
-            return "value";
+            return _productsRepository.GetProducts().SingleOrDefault(p => p.Name == name);
         }
 
-        // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public IActionResult Post([FromBody] Product product)
         {
+            if (!ModelState.IsValid) return HttpBadRequest(ModelState);
+
+            try
+            {
+                _productsRepository.AddProduct(product);
+                return new EmptyResult();
+            }
+            catch (ArgumentNullException ex)
+            {
+                ModelState.AddModelError("ArgumentNull", ex.Message);
+                return HttpBadRequest(ModelState);
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError("Argument", ex.Message);
+                return HttpBadRequest(ModelState);
+            }
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        [HttpPut("{name}")]
+        public IActionResult Put(string name, [FromBody] Product product)
         {
+            if (!ModelState.IsValid) return HttpBadRequest(ModelState);
+
+            try
+            {
+                _productsRepository.UpdateProduct(name, product);
+                return new EmptyResult();
+            }
+            catch (ArgumentNullException ex)
+            {
+                ModelState.AddModelError("ArgumentNull", ex.Message);
+                return HttpBadRequest(ModelState);
+            }
+            catch (NotFoundException ex)
+            {
+                ModelState.AddModelError("NotFound", ex.Message);
+                return HttpBadRequest(ModelState);
+            }
         }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{name}")]
+        public IActionResult Delete(string name)
         {
+            try
+            {
+                _productsRepository.DeleteProduct(name);
+                return new EmptyResult();
+            }
+            catch (ArgumentNullException ex)
+            {
+                ModelState.AddModelError("ArgumentNull", ex.Message);
+                return HttpBadRequest(ModelState);
+            }
         }
     }
 }

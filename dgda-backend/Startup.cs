@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNet.Builder;
+﻿using DGDABackend.DataLayer;
+using Microsoft.AspNet.Builder;
 using Microsoft.Framework.DependencyInjection;
 
-namespace dgda_backend
+namespace DgdaBackend
 {
     public class Startup
     {
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddSingleton<IProductsRepository, ProductsRepository>();
         }
 
         public void Configure(IApplicationBuilder app)
