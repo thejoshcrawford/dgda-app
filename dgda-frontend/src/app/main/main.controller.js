@@ -1,3 +1,4 @@
+/// <reference path="../../../typings/angularjs/angular.d.ts"/>
 (function() {
   'use strict';
 
@@ -6,34 +7,60 @@
     .controller('MainController', MainController);
 
   /** @ngInject */
-  function MainController($timeout, webDevTec, toastr) {
+  function MainController(MainService, toastr) {    
     var vm = this;
 
-    vm.awesomeThings = [];
-    vm.classAnimation = '';
-    vm.creationDate = 1434690399410;
-    vm.showToastr = showToastr;
+    vm.products = [];
+    vm.error = null;
 
     activate();
 
     function activate() {
-      getWebDevTec();
-      $timeout(function() {
-        vm.classAnimation = 'rubberBand';
-      }, 4000);
+      getProducts();
     }
-
-    function showToastr() {
-      toastr.info('Fork <a href="https://github.com/Swiip/generator-gulp-angular" target="_blank"><b>generator-gulp-angular</b></a>');
-      vm.classAnimation = '';
+    
+    function getProducts() {
+      MainService.getProducts()
+        .then(function(products){
+          vm.products = products;
+        })
+        .error(function(error){
+          vm.error = error;
+        });
     }
+    
+    vm.addProduct = function addProduct(product){
+      MainService.addProduct(product)
+        .then(function(){
+          showToastr('Product added.');
+        })
+        .error(function(error){
+          vm.error = error;
+        });
+    };
+    
+    vm.updateProduct = function updateProduct(oldName, product){
+      MainService.updateProduct(product)
+        .then(function(){
+          showToastr('Product updated.');
+        })
+        .error(function(error){
+          vm.error = error;
+        });
+    };
+    
+    vm.deleteProduct = function deleteProduct(name){
+      MainService.updateProduct(name)
+        .then(function(){
+          showToastr('Product deleted.');
+        })
+        .error(function(error){
+          vm.error = error;
+        });
+    };
 
-    function getWebDevTec() {
-      vm.awesomeThings = webDevTec.getTec();
-
-      angular.forEach(vm.awesomeThings, function(awesomeThing) {
-        awesomeThing.rank = Math.random();
-      });
+    function showToastr(message) {
+      toastr.info(message);
     }
   }
 })();

@@ -6,6 +6,6 @@
     .module('dgdaFrontend')
     .constant('malarkey', malarkey)
     .constant('toastr', toastr)
-    .constant('moment', moment);
-
+    .constant('moment', moment)
+    .constant('serverUrl', 'http://localhost:43409/');
 })();
