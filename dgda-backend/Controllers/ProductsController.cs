@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DgdaBackend.Entities;
 using DGDABackend.DataLayer;
+using Microsoft.AspNet.Cors.Core;
 using Microsoft.AspNet.Mvc;
 
 namespace DgdaBackend.Controllers
@@ -32,6 +33,9 @@ namespace DgdaBackend.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Product product)
         {
+            // dirty hack because of a CORS bug in ASP.NET 5
+            if (Request.Method == "OPTIONS") return new EmptyResult();
+
             if (!ModelState.IsValid) return HttpBadRequest(ModelState);
 
             try
@@ -54,6 +58,9 @@ namespace DgdaBackend.Controllers
         [HttpPut("{name}")]
         public IActionResult Put(string name, [FromBody] Product product)
         {
+            // dirty hack because of a CORS bug in ASP.NET 5
+            if (Request.Method == "OPTIONS") return new EmptyResult();
+
             if (!ModelState.IsValid) return HttpBadRequest(ModelState);
 
             try
@@ -76,6 +83,9 @@ namespace DgdaBackend.Controllers
         [HttpDelete("{name}")]
         public IActionResult Delete(string name)
         {
+            // dirty hack because of a CORS bug in ASP.NET 5
+            if (Request.Method == "OPTIONS") return new EmptyResult();
+
             try
             {
                 _productsRepository.DeleteProduct(name);

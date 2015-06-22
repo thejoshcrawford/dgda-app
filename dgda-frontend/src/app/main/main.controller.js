@@ -11,7 +11,7 @@
     var vm = this;
 
     vm.products = [];
-    vm.error = null;
+    vm.productToAdd = {Name: null, Description: null, Price: null, InStock: false};
 
     activate();
 
@@ -21,46 +21,58 @@
     
     function getProducts() {
       MainService.getProducts()
-        .then(function(products){
-          vm.products = products;
+        .success(function(data){
+          vm.products = data.map(function(cur){
+            return {
+              Name: cur.Name, 
+              OldName: cur.Name, 
+              Description: cur.Description, 
+              Price: cur.Price,
+              InStock: cur.InStock
+              }
+          });
         })
-        .error(function(error){
-          vm.error = error;
+        .error(function(data, status){
+          showToastr("Unable to get products.", "Failed");
         });
     }
     
-    vm.addProduct = function addProduct(product){
-      MainService.addProduct(product)
-        .then(function(){
-          showToastr('Product added.');
+    vm.addProduct = function addProduct(){
+      MainService.addProduct(vm.productToAdd)
+        .success(function(){
+          showToastr('Product added.', "Success");
+          vm.productToAdd = {Name: null, Description: null, Price: null, InStock: false};
+          getProducts();
         })
         .error(function(error){
-          vm.error = error;
+          showToastr("Unable to add product.", "Failed");
         });
     };
     
-    vm.updateProduct = function updateProduct(oldName, product){
-      MainService.updateProduct(product)
-        .then(function(){
-          showToastr('Product updated.');
+    vm.updateProduct = function updateProduct(product){
+      MainService.updateProduct(product.OldName, product)
+        .success(function(){
+          showToastr('Product updated.', "Success");
+          getProducts();
         })
         .error(function(error){
-          vm.error = error;
+          showToastr("Unable to update product.", "Failed");
         });
     };
     
     vm.deleteProduct = function deleteProduct(name){
-      MainService.updateProduct(name)
-        .then(function(){
-          showToastr('Product deleted.');
+      MainService.deleteProduct(name)
+        .success(function(){
+          showToastr('Product deleted.', "Success");
+          getProducts();
         })
         .error(function(error){
-          vm.error = error;
+          showToastr("Unable to delete product.", "Failed");
         });
     };
 
-    function showToastr(message) {
-      toastr.info(message);
+    function showToastr(message, title) {
+      toastr.info(message, title);
     }
   }
 })();
