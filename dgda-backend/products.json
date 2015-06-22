@@ -1,1 +1,1 @@
-[{"Name":"Josh","Description":"test1","Price":6.0,"InStock":false},{"Name":"1","Description":"1","Price":1.0,"InStock":true},{"Name":"Josh23","Description":"test2","Price":54.0,"InStock":true},{"Name":"2","Description":"1","Price":1.0,"InStock":false}]
+[{"Name":"New Product","Description":"test2","Price":54.0,"InStock":true},{"Name":"Another Product","Description":"Long Description","Price":1.0,"InStock":false},{"Name":"My Product","Description":"1","Price":1.0,"InStock":true},{"Name":"This Product2","Description":"test1","Price":6.0,"InStock":false}]

@@ -21,7 +21,7 @@ namespace DgdaBackend.Controllers
         [HttpGet]
         public IEnumerable<Product> Get()
         {
-            return _productsRepository.GetProducts();
+            return _productsRepository.GetProducts().OrderBy(p => p.Name);
         }
 
         [HttpGet("{id}")]
