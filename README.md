@@ -11,5 +11,4 @@
 2.  `npm install`
 3.  `bower install`
 4.  `gulp build`
-5.  `gulp serve`
-6.  navigate to http://localhost:3000
+5.  `gulp serve` will open a browser window to the SPA
