@@ -7,7 +7,7 @@
 
 ### Front End
 1.  Navigate to dgda-frontend
-1.  Make sure node, npm, bower and gulp are installed.
+1.  Make sure node, npm, git, bower and gulp are installed.
 2.  `npm install`
 3.  `bower install`
 4.  `gulp build`
